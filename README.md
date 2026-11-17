@@ -12,7 +12,7 @@ Colours based on the Coalesce Lab logo, for R and ggplot2.
 remotes::install_github("<lab-or-user>/coalescepal")
 ```
 
-Pin a version for reproducible figures: `remotes::install_github("<lab-or-user>/coalescepal@v0.1.0")`.
+Pin a version for reproducible figures: `remotes::install_github("PaulKSchuler/coalescepal@v0.1.0")`.
 
 ## Use
 
