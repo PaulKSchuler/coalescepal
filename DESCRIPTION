@@ -1,7 +1,7 @@
 Package: coalescepal
 Title: Coalesce Lab Colour Palette
 Version: 0.1.0
-Authors@R: person("Paul", "Schuler", email = PaulKilian.Schuler@uab.cat, role = c("aut", "cre"))
+Authors@R: person("Paul", "Schuler", email = "PaulKilian.Schuler@uab.cat", role = c("aut", "cre"))
 Description: Colours based on the Coalesce Lab logo (navy, sand, salmon), with
     ggplot2 scales, point shapes, and colour-blind safe and greyscale safe
     variants.
