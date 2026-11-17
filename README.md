@@ -1,4 +1,5 @@
 # coalescepal
+<img src="man/figures/logo.png" align="right" height="139" alt="coalescepal logo" />
 
 Colours based on the Coalesce Lab logo, for R and ggplot2.
 
