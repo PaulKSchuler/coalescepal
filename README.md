@@ -32,6 +32,11 @@ ggplot(mpg, aes(displ, hwy, colour = drv, shape = drv)) +
 | `"logo"` (default) | navy, sand, salmon, teal, rust, lavender | posters, talks, with a second cue |
 | `"screen"` | logo colours, never sand and salmon as two series | colour-blind safe, up to 5 colours |
 | `"print"` | navy, rust, teal, ochre, lavender, cream | black-and-white print |
+| `"slides"` | navy, sand, salmon (exact logo), sky, coral, lavender | projected slides, on white or navy |
+
+For slides, `theme_coalesce_slides("dark")` draws on the logo navy (use
+`"light"` for white), and `ppt_theme` lists the twelve PowerPoint theme
+colours. On white, sand has little contrast, so give those points an outline.
 
 **Caution.** Sand and salmon look almost identical with red-green colour
 blindness and print as the same grey. When a figure uses both, add a shape

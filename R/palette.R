@@ -22,7 +22,9 @@ coalesce_all <- c(
   rust     = "#8A3324",  # deep salmon
   lavender = "#B9BBD8",  # light navy tint
   ochre    = "#B8923A",  # deep sand (print mode)
-  cream    = "#F3E6C8"   # light sand (print mode)
+  cream    = "#F3E6C8",  # light sand (print mode)
+  sky      = "#3FA7B3",  # brighter teal (slides mode)
+  coral    = "#E07B5A"   # stronger salmon (slides mode)
 )
 
 #' Discrete Coalesce palette
@@ -33,6 +35,10 @@ coalesce_all <- c(
 #'   * `"screen"`: logo colours, never sand and salmon as two separate series
 #'     (colour-blind safe, up to 5 colours; the 6-colour set still contains both).
 #'   * `"print"`: deeper variants that are also distinct in black and white.
+#'   * `"slides"`: the exact logo navy, sand and salmon first, then brighter
+#'     teal, coral and lavender. Meant for projected slides, where colour
+#'     differences survive better than on paper. Works on white and on navy
+#'     backgrounds (see [theme_coalesce_slides()]).
 #'
 #' @details Sand and salmon look almost identical with red-green colour
 #'   blindness and print as the same grey. Whenever a figure uses both, add a
@@ -44,7 +50,7 @@ coalesce_all <- c(
 #' coalesce_pal(4)
 #' coalesce_pal(4, "print")
 #' @export
-coalesce_pal <- function(n, mode = c("logo", "screen", "print")) {
+coalesce_pal <- function(n, mode = c("logo", "screen", "print", "slides")) {
   mode <- match.arg(mode)
   if (!n %in% 2:6) stop("coalesce_pal() supports 2 to 6 colours", call. = FALSE)
   idx <- switch(
@@ -58,6 +64,7 @@ coalesce_pal <- function(n, mode = c("logo", "screen", "print")) {
       "5" = c("navy", "sand", "lavender", "teal", "rust"),
       "6" = c("navy", "sand", "lavender", "teal", "rust", "salmon")
     ),
+    slides = c("navy", "sand", "salmon", "sky", "coral", "lavender")[seq_len(n)],
     print = switch(
       as.character(n),
       "2" = c("navy", "ochre"),
@@ -67,7 +74,7 @@ coalesce_pal <- function(n, mode = c("logo", "screen", "print")) {
       "6" = c("navy", "rust", "teal", "ochre", "lavender", "cream")
     )
   )
-  if (all(c("sand", "salmon") %in% idx) && mode != "print" &&
+  if (all(c("sand", "salmon") %in% idx) && !mode %in% c("print") &&
       !isTRUE(getOption("coalesce.quiet"))) {
     warning("Sand and salmon look alike with red-green colour blindness and in ",
             "greyscale. Add a shape, an outline or direct labels. ",
@@ -151,4 +158,59 @@ scale_fill_coalesce_div <- function(midpoint = 0, ...) {
   need_ggplot2()
   ggplot2::scale_fill_gradient2(low = coalesce_div[["low"]], mid = coalesce_div[["mid"]],
                                 high = coalesce_div[["high"]], midpoint = midpoint, ...)
+}
+
+
+#' Slide colours
+#'
+#' Background, text and accent colours for slides that follow the logo.
+#' `coalesce_slides` has a dark (navy) and a light (white) set. The
+#' `ppt_theme` vector lists the twelve PowerPoint theme slots, so the colours
+#' can be entered under Design > Variants > Colors > Customize Colors.
+#' @name coalesce_slides
+NULL
+
+#' @rdname coalesce_slides
+#' @export
+coalesce_slides <- list(
+  dark  = c(background = "#1F2370", text = "#F3E6C8", muted = "#B9BBD8",
+            accent = "#F3AB92", accent2 = "#DBBE83"),
+  light = c(background = "#FFFFFF", text = "#1F2370", muted = "#6B6F9E",
+            accent = "#C4603F", accent2 = "#B8923A")
+)
+
+#' @rdname coalesce_slides
+#' @export
+ppt_theme <- c(
+  dk1 = "#1F2370", lt1 = "#FFFFFF", dk2 = "#161A52", lt2 = "#F3E6C8",
+  accent1 = "#1F2370", accent2 = "#DBBE83", accent3 = "#F3AB92",
+  accent4 = "#3FA7B3", accent5 = "#E07B5A", accent6 = "#B9BBD8",
+  hlink = "#1B7F8A", folHlink = "#8A3324"
+)
+
+#' ggplot2 theme for slides
+#'
+#' Large text and thicker lines for projection. `style = "dark"` draws on the
+#' logo navy; `"light"` draws on white. Pair with
+#' `scale_colour_coalesce(n, "slides")`.
+#'
+#' @param style `"dark"` or `"light"`.
+#' @param base_size Base font size.
+#' @export
+theme_coalesce_slides <- function(style = c("dark", "light"), base_size = 18) {
+  need_ggplot2()
+  style <- match.arg(style)
+  k <- coalesce_slides[[style]]
+  grid <- if (style == "dark") "#3A3F94" else "#E6E6EE"
+  ggplot2::theme_minimal(base_size = base_size) +
+    ggplot2::theme(
+      text = ggplot2::element_text(colour = k[["text"]]),
+      axis.text = ggplot2::element_text(colour = k[["text"]]),
+      plot.background = ggplot2::element_rect(fill = k[["background"]], colour = NA),
+      panel.background = ggplot2::element_rect(fill = k[["background"]], colour = NA),
+      panel.grid.major = ggplot2::element_line(colour = grid, linewidth = 0.4),
+      panel.grid.minor = ggplot2::element_blank(),
+      legend.position = "top",
+      strip.text = ggplot2::element_text(colour = k[["text"]], face = "bold")
+    )
 }
